@@ -32,6 +32,7 @@ namespace _24_
                 string query = $"SELECT * from {table}";
                 MySqlCommand command = new MySqlCommand(query, connection);
                 MySqlDataReader reader = command.ExecuteReader();
+                kifli.kiflik.Clear();
                 while (reader.Read())
                 {
                     int id = reader.GetInt32(reader.GetOrdinal("id"));
@@ -40,9 +41,10 @@ namespace _24_
 
                     kifli oneKifli = new kifli();
 
-                    oneKifli.id = id;
+                    
                     oneKifli.nameKifli = name;
                     oneKifli.quantity = quantity;
+                    oneKifli.id = id;
 
                     kifli.kiflik.Add(oneKifli);
                 }
@@ -55,23 +57,40 @@ namespace _24_
                 MessageBox.Show("beolvbasas hiba " + e.Message);
             }
         }
-
+        public void deleteAll()
+        {
+            try
+            {
+                connection.Open();
+                string query = $"delete from {table}";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                connection.Close();
+                MessageBox.Show("Minden törölve");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error");
+            }
+        }
         public void addOne(kifli oneKifli)
         {
             try
             {
                 connection.Open();
-                string query = $"INSRET INTO {table}(name,quantity)" + $"values('{oneKifli.nameKifli}','{oneKifli.quantity}')";
+                string query = $"INSERT INTO {table} (name,quantity) values ('{oneKifli.nameKifli}',{oneKifli.quantity})";
                 MySqlCommand comand = new MySqlCommand(query, connection);
                 comand.ExecuteNonQuery();
                 comand.Dispose();
                 connection.Close();
-                MessageBox.Show("sikerult");
+                
             }
             catch (Exception)
             {
                 
             }
+            
         }
 
         public void deleteOnekifli(kifli onekifli)
@@ -84,7 +103,7 @@ namespace _24_
                 command.ExecuteNonQuery();
                 command.Dispose();
                 connection.Close();
-                MessageBox.Show("delted one");
+                
             }
             catch (Exception e)
             {
@@ -92,18 +111,23 @@ namespace _24_
                 MessageBox.Show(e.Message ,"error ");
             }
         }
-        public void insertOne(kifli oneKifli)
+        /*public void insertOne(kifli oneKifli)
         {
             try
             {
                 connection.Open();
-                string query = $"insert into {table} (name,quantity)";
+                string query = $"insert into {table} (name,price,weight) " +
+                    $"values ('{oneKifli.nameKifli}',{oneKifli.quantity})";
+                MySqlCommand command = new MySqlCommand(query, connection);
+                command.ExecuteNonQuery();
+                command.Dispose();
+                connection.Close();
+                MessageBox.Show("Sikeres beillesztés");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                throw;
+                MessageBox.Show(e.Message, "Error");
             }
-        }
+        }*/
     }
 }

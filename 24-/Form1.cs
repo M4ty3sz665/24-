@@ -16,14 +16,54 @@ namespace _24_
         public Form1()
         {
             InitializeComponent();
-            db = new dbhandler();
-            db.readAll();
-            kifli onekifli = new kifli();
-            onekifli.nameKifli = "fokhagymas";
-            onekifli.quantity = 3;
-            onekifli.id = 1;
-            db.addOne(onekifli);
-            db.deleteOnekifli(onekifli);
+            start();            
         }
+        void start()
+        {
+            db = new dbhandler();
+            readInfo();
+
+
+            addButton.Click += addButtonClick;
+            deleteButton.Click += deleteButtonClick;
+            alldeleteButton.Click += deleteAllButtonClick;
+        }
+        void addButtonClick(object s, EventArgs e)
+        {
+            kifli oneNewkifli = new kifli();
+            oneNewkifli.nameKifli = guna2TextBox1.Text;
+            oneNewkifli.quantity = Convert.ToInt32(guna2TextBox3.Text);
+            db.addOne(oneNewkifli);
+            readInfo();
+        }
+
+        void deleteButtonClick(object s , EventArgs e)
+        {
+            int temp = listBox1.SelectedIndex;   
+            if (temp < 0)
+            {
+                return;
+            }
+            db.deleteOnekifli(kifli.kiflik[temp]);
+            kifli.kiflik.RemoveAt(temp);
+            readInfo();
+        }
+
+        void deleteAllButtonClick(object s,EventArgs e)
+        {
+            db.deleteAll();
+            readInfo();
+        }
+
+        void readInfo()
+        {
+            db.readAll();
+            listBox1.Items.Clear();
+            foreach (kifli item in kifli.kiflik)
+            {
+                listBox1.Items.Add($"Kiflik : {item.nameKifli}, Mennyiség : {item.quantity}");
+            }
+        }
+
     }
 }
